@@ -1,73 +1,64 @@
-#include "main.h"
+#include "shell.h"
 
 /**
- * free_data - frees data structure
+ * main - Entry point of the shell
  *
- * @datash: data structure
- * Return: no return
- */
-void free_data(data_shell *datash)
-{
-	unsigned int i;
-
-	for (i = 0; datash->_environ[i]; i++)
-	{
-		free(datash->_environ[i]);
-	}
-
-	free(datash->_environ);
-	free(datash->pid);
-}
-
-/**
- * set_data - Initialize data structure
+ * @ac: Argument count
+ * @av: Argument vector
  *
- * @datash: data structure
- * @av: argument vector
- * Return: no return
- */
-void set_data(data_shell *datash, char **av)
-{
-	unsigned int i;
-
-	datash->av = av;
-	datash->input = NULL;
-	datash->args = NULL;
-	datash->status = 0;
-	datash->counter = 1;
-
-	for (i = 0; environ[i]; i++)
-		;
-
-	datash->_environ = malloc(sizeof(char *) * (i + 1));
-
-	for (i = 0; environ[i]; i++)
-	{
-		datash->_environ[i] = _strdup(environ[i]);
-	}
-
-	datash->_environ[i] = NULL;
-	datash->pid = aux_itoa(getpid());
-}
-
-/**
- * main - Entry point
- *
- * @ac: argument count
- * @av: argument vector
- *
- * Return: 0 on success.
+ * Return: the (int)value of status.
  */
 int main(int ac, char **av)
 {
-	data_shell datash;
+	cmd_t cmd;
 	(void) ac;
 
-	signal(SIGINT, get_sigint);
-	set_data(&datash, av);
-	shell_loop(&datash);
-	free_data(&datash);
-	if (datash.status < 0)
-		return (255);
-	return (datash.status);
+	signal(SIGINT, handl_sigint);
+	/*open_console();*/
+	init_cmd(&cmd, av);
+	rep_loop(&cmd);
+	free_cmd(&cmd);
+	return (cmd.status);
+}
+
+/**
+ * rep_loop - read-eval-print loop of shell
+ * @cmd: data relevant (av, input, args)
+ *
+ * Return: no return.
+ */
+void rep_loop(cmd_t *cmd)
+{
+	int loop;
+	int i_eof;
+	char *input;
+
+	loop = 1;
+	while (loop == 1)
+	{
+		input =  _readwrite(1, &i_eof);
+		if (i_eof != -1)
+		{
+			input = handl_comment(input);
+			if (input == NULL)
+				continue;
+
+			if (check_syntax_error(cmd, input) == 1)
+			{
+				cmd->status = 2;
+				free(input);
+				continue;
+			}
+
+			input = parse_input(input, cmd);
+			loop = apply_seperators(cmd, input);
+			cmd->counter += 1;
+			free(input);
+		}
+		else
+		{
+			loop = 0;
+			free(input);
+		}
+	}
 }

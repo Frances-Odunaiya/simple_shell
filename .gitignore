@@ -1,6 +1,4 @@
-# Ignore Emacs buffer files
-*#
-*~
-
-# Ignore executable file
+*.exe
 *.out
+vscode
+hsh
