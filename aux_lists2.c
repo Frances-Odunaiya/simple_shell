@@ -1,35 +1,35 @@
-#include "shell.h"
+#include "main.h"
 
 /**
- * add_node_end - adds a node to end list.
+ * add_rvar_node - adds a variable at the end
+ * of a r_var list.
  * @head: head of the linked list.
- * @var_len: length of the variable.
+ * @lvar: length of the variable.
  * @val: value of the variable.
- * @len_val: length of the value.
+ * @lval: length of the value.
  * Return: address of the head.
  */
-list_t *add_node_end(list_t **head, int var_len, char *val, int len_val)
+r_var *add_rvar_node(r_var **head, int lvar, char *val, int lval)
 {
-	list_t *new, *temp;
+	r_var *new, *temp;
 
-	new = malloc(sizeof(list_t));
+	new = malloc(sizeof(r_var));
 	if (new == NULL)
-	{
-		free(new);
 		return (NULL);
-	}
 
-	new->var_len = var_len;
+	new->len_var = lvar;
 	new->val = val;
-	new->len_val = len_val;
+	new->len_val = lval;
 
 	new->next = NULL;
+	temp = *head;
 
-	if (!(*head))
+	if (temp == NULL)
+	{
 		*head = new;
+	}
 	else
 	{
-		temp = *head;
 		while (temp->next != NULL)
 			temp = temp->next;
 		temp->next = new;
@@ -39,14 +39,14 @@ list_t *add_node_end(list_t **head, int var_len, char *val, int len_val)
 }
 
 /**
- * free_list - frees a list_t list
+ * free_rvar_list - frees a r_var list
  * @head: head of the linked list.
  * Return: no return.
  */
-void free_list(list_t **head)
+void free_rvar_list(r_var **head)
 {
-	list_t *temp;
-	list_t *curr;
+	r_var *temp;
+	r_var *curr;
 
 	if (head != NULL)
 	{

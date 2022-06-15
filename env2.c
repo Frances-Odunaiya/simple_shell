@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "main.h"
 
 /**
  * copy_info - copies info to create
@@ -56,6 +56,7 @@ void set_env(char *name, char *value, data_shell *datash)
 	datash->_environ[i] = copy_info(name, value);
 	datash->_environ[i + 1] = NULL;
 }
+
 
 /**
  * _setenv - compares env variables names

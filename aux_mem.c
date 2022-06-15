@@ -1,4 +1,5 @@
-#include "shell.h"
+#include "main.h"
+
 /**
  * _memcpy - copies information between void pointers.
  * @newptr: destination pointer.
@@ -12,7 +13,6 @@ void _memcpy(void *newptr, const void *ptr, unsigned int size)
 	char *char_ptr = (char *)ptr;
 	char *char_newptr = (char *)newptr;
 	unsigned int i;
-
 
 	for (i = 0; i < size; i++)
 		char_newptr[i] = char_ptr[i];
@@ -28,7 +28,7 @@ void _memcpy(void *newptr, const void *ptr, unsigned int size)
  * if new_size == old_size, returns ptr without changes.
  * if malloc fails, returns NULL.
  */
-void *_realloc(void *ptr, size_t old_size, size_t new_size)
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
 	void *newptr;
 
@@ -40,7 +40,7 @@ void *_realloc(void *ptr, size_t old_size, size_t new_size)
 		free(ptr);
 		return (NULL);
 	}
-  
+
 	if (new_size == old_size)
 		return (ptr);
 

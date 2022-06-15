@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "main.h"
 
 /**
  * get_len - Get the lenght of a number.
@@ -27,13 +27,12 @@ int get_len(int n)
 
 	return (lenght);
 }
-
 /**
- * _itoa - function converts int to string.
+ * aux_itoa - function converts int to string.
  * @n: type int number
  * Return: String.
  */
-char *_itoa(int n)
+char *aux_itoa(int n)
 {
 	unsigned int n1;
 	int lenght = get_len(n);
@@ -67,26 +66,35 @@ char *_itoa(int n)
 }
 
 /**
- * copy_info - copies info to create
- * a new env or alias
- * @name: name (env or alias)
- * @value: value (env or alias)
- *
- * Return: new env or alias.
+ * _atoi - converts a string to an integer.
+ * @s: input string.
+ * Return: integer.
  */
-char *copy_info(char *name, char *value)
+int _atoi(char *s)
 {
-	char *new;
-	int len_name, len_value, len;
+	unsigned int count = 0, size = 0, oi = 0, pn = 1, m = 1, i;
 
-	len_name = _strlen(name);
-	len_value = _strlen(value);
-	len = len_name + len_value + 2;
-	new = malloc(sizeof(char) * (len));
-	_strcpy(new, name);
-	_strcat(new, "=");
-	_strcat(new, value);
-	_strcat(new, "\0");
+	while (*(s + count) != '\0')
+	{
+		if (size > 0 && (*(s + count) < '0' || *(s + count) > '9'))
+			break;
 
-	return (new);
+		if (*(s + count) == '-')
+			pn *= -1;
+
+		if ((*(s + count) >= '0') && (*(s + count) <= '9'))
+		{
+			if (size > 0)
+				m *= 10;
+			size++;
+		}
+		count++;
+	}
+
+	for (i = count - size; i < count; i++)
+	{
+		oi = oi + ((*(s + i) - 48) * m);
+		m /= 10;
+	}
+	return (oi * pn);
 }
